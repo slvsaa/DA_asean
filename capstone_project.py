@@ -25,8 +25,7 @@ st.markdown(page_bg_img, unsafe_allow_html=True)
 menu_data = [
         {'icon': "bi bi-geo-alt", 'label':"by Country", 'ttip':"Dashboard Based on Country"},
         {'icon': "bi bi-app-indicator", 'label':"by Indicator", 'ttip':"Dashboard Based on Indicator"},
-        {'icon': "bi bi-clipboard-data", 'label':"Analysis", 'ttip':"Data Analysis"},
-        {'icon': "far fa-address-book", 'label':"Info", 'ttip':"Information about project and me"}
+        {'icon': "far fa-address-book", 'label':"Info", 'ttip':"Contact"}
 ]
 
 over_theme = {'txc_inactive': 'white','menu_background':'#6B7AA1','txc_active':'#11324D','option_active':'#E7E0C9'}
@@ -105,7 +104,7 @@ if menu_id == 'Home':
     col1,col2 = st.columns([1,1])
     with col1:
         st.markdown(p_format+
-                '<b>Tabel Rata-Rata IQ di ASEAN</b> menunjukkan Rata-rata IQ di ASEAN yang sudah diurutkan. '\
+                '<b>Diagram Rata-Rata IQ di ASEAN</b> menunjukkan Rata-rata IQ di ASEAN yang sudah diurutkan. '\
                 'Dapat dilihat bahwa Indonesia berada diperingkat 2 terakhir dengan Singapura berada diperingkat teratas dan Timor Leste berada diperingkat terakhir di ASEAN. '\
                 'Timor Leste berada diperingkat terakhir namun IQ yang dimiliki sama dengan Indonesia.' ,unsafe_allow_html=True)
         
@@ -145,8 +144,8 @@ if menu_id == 'Home':
 
     # PDB dan Pengeluaran Pendidikan    
     st.subheader('PDB dan Pengeluaran untuk Pendidikan Setiap Negara')
-    df_combo2 = df_main[['Rank IQ','Nama Negara', 'PDB dalam USD','Year', 
-                        'Total pengeluaran pemerintah untuk pendidikan', 'Total Populasi']].sort_values('Rank IQ')
+    df_combo2 = df_main[['Rank IQ','Nama Negara', 'PDB dalam USD','Year', 'Total pengeluaran pemerintah untuk pendidikan',
+                         'Total Populasi','Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)']].sort_values('Rank IQ')
     
     cold,cole= st.columns([1,3])
     with cold:
@@ -161,7 +160,10 @@ if menu_id == 'Home':
         go.Bar(name='Pengeluaran Pendidikan', 
                 x=df_combo2[df_combo2['Year']==year_1]['Nama Negara'], 
                 y=df_combo2[df_combo2['Year']==year_1]['Total pengeluaran pemerintah untuk pendidikan'],
-                text=df_combo2[df_combo2['Year']==year_1]['Total pengeluaran pemerintah untuk pendidikan'])
+                text=df_combo2[df_combo2['Year']==year_1]['Total pengeluaran pemerintah untuk pendidikan'],
+                hovertext=round(df_combo2[df_combo2['Year']==year_1]['Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)'],2),
+                hovertemplate ='%{hovertext}%'
+        ),
     ])
     fig12.add_trace(
             go.Scatter(
@@ -169,7 +171,6 @@ if menu_id == 'Home':
                 y=df_combo2[df_combo2['Year']==year_1]['Total Populasi'],
                 yaxis="y2",
                 name="Total Populasi",
-                # marker=dict(color="crimson"),
         )
     )
 
@@ -213,20 +214,31 @@ if menu_id == 'Home':
     st.plotly_chart(fig12, use_container_width=True)
 
     st.markdown(p_format+
-                '<b>Pada awal tahun 2023, World Population Review memaparkan Rata-Rata IQ berdasarkan Negara pada lamannya. </b>'\
-                'IQ atau Intelligence Quotient merupakana salah satu tolak ukur untuk menilai kecerdasan seseorang dengan cara '\
-                'mengikuti tes, semakin tinggi angkanya maka semakin tinggi pula kecerdasan orang tersebut. '\
-                'Indoensia sendiri mendapat peringkat 130 dari seluruh negara dengan Rata-Rata IQ 78,49. ', unsafe_allow_html=True)
-
+                'Dilihat dari nominal, pengeluaran pemerintah untuk pendidikan di Indonesia lebih besar dibanding negara lainnya.'\
+                'Namun, bila dilihat dari presentase-nya, biaya pendidikan yang diambil dr PBD masing-masing tidak terlalu beda jauh,'\
+                'yaitu 2-5%', unsafe_allow_html=True)
+    
+    # Pemuda
+    st.subheader('Populasi Pemuda yang tidak sekolah, kerja, maupun pelatihan')
     cola,colb,colc = st.columns([1,2,1])
     # Data chart 2
     df_combo = df_main[['Rank IQ','Nama Negara', 'Total of youth not in education, employment or training','Year', 
-                            'Total pengeluaran pemerintah untuk pendidikan','Total Youth']].sort_values('Rank IQ')
+                            'Total pengeluaran pemerintah untuk pendidikan','Total Youth',
+                            'Share of youth not in education, employment or training, total (% of youth population)']].sort_values('Rank IQ')
     with colb:
         years = list(df_main['Year'].unique())
         year = st.selectbox('Choose Year', years)
 
     col5,col6 = st.columns([1,1])
+    with col5:
+        st.markdown(p_format+
+                'Diagram disamping menunjukkan perbandingan total pemuda seluruhnya dengan total pemuda yang tidak sekolah, kerja, maupun mengikuti pelatihan '\
+                'Jika dilihat dari diagram, jumlah pemuda tidak bersekolah palinga banyak berada di Indonesia. Namun, jika memerhatikan besarnya '\
+                'presentase setiap negara, Timor Leste memiliki 30% keatas Pemuda tidak sekolah dari total pemuda yang berada di Timor Leste', unsafe_allow_html=True)
+
+        st.markdown(p_format+
+                'Jika dilihat lebih detail lagi, negara yang memiliki Rata-Rata IQ yang melebihi Rata-Rata IQ di ASEAN memiliki presentase kurang dari 20%'\
+                'pemuda tidak bersekolah, sdangkan yang berada dibawah rata-rata mencapai 15-30% ', unsafe_allow_html=True)    
     with col6:
         fig11 = go.Figure(
             data=go.Bar(
@@ -244,7 +256,8 @@ if menu_id == 'Home':
                 y=df_combo[df_combo['Year']==year]['Total of youth not in education, employment or training'],
                 yaxis="y2",
                 name="Pemuda Tidak sekolah",
-                # marker=dict(color="crimson"),
+                hovertext=round(df_combo[df_combo['Year']==year]['Share of youth not in education, employment or training, total (% of youth population)'],2),
+                hovertemplate ='%{hovertext}%'
             )
         )
 
@@ -280,6 +293,12 @@ if menu_id == 'Home':
         fig11.update_traces(texttemplate='%{text:.3s}')
         st.plotly_chart(fig11, use_container_width=True)
 
-
+st.markdown("---")
+st.subheader('Kesimpulan')
+st.markdown(p_format+
+            'Berdasarkan analisis sederhana yang saya lakukan, dapat disimpulakan bahwa banyaknya biaya pendidikan yang dikeluarkan oleh pemerintah '\
+            'tidak dapat dijadikan tolak ukur untuk menilai kualitas pendidikan. <b>Pendidikan yang tepat sasaran dan dapat '\
+            'di rasakan oleh orang-orang yang berhak lah yg bisa menjadi nilai kualitas pendidikan disuatu negara.</b> Perlu lebih banyak data dari indikator '\
+            'maupun variable lain untuk bisa menilai lebih dalam kualitas pendidikan.', unsafe_allow_html=True)   
 
     
