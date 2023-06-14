@@ -113,47 +113,55 @@ if menu_id == 'Home':
                          'Total Populasi','Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)']].mean().reset_index()
 
     fig12 = go.Figure(data=[
-        go.Bar(name='PDB dalam USD', 
-               x=df_combo2['Nama Negara'], 
-                y=df_combo2['PDB dalam USD'],
-                text=df_combo2['PDB dalam USD']),
+        # go.Bar(name='PDB dalam USD', 
+        #        x=df_combo2['Nama Negara'], 
+        #         y=df_combo2['PDB dalam USD'],
+        #         text=df_combo2['PDB dalam USD']),
         go.Bar(name='Pengeluaran Pendidikan', 
                 x=df_combo2['Nama Negara'], 
-                y=df_combo2['Total pengeluaran pemerintah untuk pendidikan'],
-                text=df_combo2['Total pengeluaran pemerintah untuk pendidikan'],
-                hovertext=round(df_combo2['Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)'],2),
-                hovertemplate ='%{hovertext}%'
+                # y=df_combo2['Total pengeluaran pemerintah untuk pendidikan'],
+                y=df_combo2['Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)'],
+                # text=[str(i)+' %' for i in round(df_combo2['Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)'],2)],
+                # text_auto='.0%',
+                text=round(df_combo2['Pengeluaran pemerintah untuk pendidikan, total (% dari PDB)'],2),
+                hovertext=df_combo2['Total pengeluaran pemerintah untuk pendidikan']
         ),
     ])
-    fig12.add_trace(
-            go.Scatter(
-                x=df_combo2['Nama Negara'],
-                y=df_combo2['Total Populasi'],
-                yaxis="y2",
-                name="Total Populasi",
-                hovertext=round(df_combo2['Total Populasi'],2)
-        )
-    )
+    # fig12.add_trace(
+    #         go.Scatter(
+    #             x=df_combo2['Nama Negara'],
+    #             y=df_combo2['Total Populasi'],
+    #             yaxis="y2",
+    #             name="Total Populasi",
+    #             hovertext=round(df_combo2['Total Populasi'],2)
+    #     )
+    # )
 
     fig12.update_layout(
-        title_text='Perbandingan Rata-Rata PDB dan Pengeluaran Pendidikan tiap Negara (2017-2021)', 
-        title_x=0.2,
-            legend=dict(
-                orientation="h",
-                y=-0.1,
-                x=0
-        ),
+        # title_text='Perbandingan Rata-Rata PDB dan Pengeluaran Pendidikan tiap Negara (2017-2021)', 
+        # title_x=0.2,
+        #     legend=dict(
+        #         orientation="h",
+        #         y=-0.1,
+        #         x=0
+        # ),
         yaxis=dict(
-            title=dict(text="Uang dalam USD"),
+            title=dict(text="Presentase Pengeluaran Pendidikan dari PDB"),
             side="left",
         ),
-        yaxis2=dict(
-            title=dict(text="Populasi"),
-            side="right",
-            overlaying="y",
-            tickmode="sync",
-    ))
-    fig12.update_traces(texttemplate='%{text:.3s}')
+    #     yaxis2=dict(
+    #         title=dict(text="Populasi"),
+    #         side="right",
+    #         overlaying="y",
+    #         tickmode="sync",
+    # )
+    )
+    fig12.update_traces(texttemplate='%{text}%',
+                        # hovertemplate="<br>".join([
+                        #     "Total PDB = {:.2f}".format(i for i in df_combo2['PDB dalam USD']),
+                        #     "Total Pengeluaran = {:.2f}".format(i for i in df_combo2['Total pengeluaran pemerintah untuk pendidikan'])
+                        # ])
+                    )
 
     column1, column2, column3, column4 = st.columns([1,1,1,1])
     with col1:
@@ -197,7 +205,7 @@ if menu_id == 'Home':
     # Change the bar mode
     fig12.update_layout(barmode='group')
     st.plotly_chart(fig12, use_container_width=True)
-    st.caption('Giga (simbol G) adalah sebuah awalan satuan dalam sistem metrik yang menunjukkan faktor miliar (1.000.000.000).')
+    # st.caption('Giga (simbol G) adalah sebuah awalan satuan dalam sistem metrik yang menunjukkan faktor miliar (1.000.000.000).')
 
     st.markdown(p_format+
                 'Dilihat dari nominal, pengeluaran pemerintah Indonesia untuk pendidikan lebih besar dibanding negara lainnya dan Timor Leste memiliki pengeluaran terendah. '\
@@ -219,58 +227,74 @@ if menu_id == 'Home':
                             'Total pengeluaran pemerintah untuk pendidikan','Total Youth',
                             'Share of youth not in education, employment or training, total (% of youth population)']].mean().reset_index()
 
-    col5,col6 = st.columns([1,1])
-    with col5:
-        st.markdown(p_format+
+    # col5,col6 = st.columns([1,1])
+    # with col5:
+    st.markdown(p_format+
                 'Diagram disamping menunjukkan perbandingan total pemuda seluruhnya dengan total pemuda yang tidak sekolah, kerja, maupun mengikuti pelatihan '\
                 'Jika dilihat dari diagram, jumlah pemuda tidak bersekolah paling banyak berada di Indonesia. Namun, jika memerhatikan besarnya '\
                 'presentase setiap negara, Timor Leste memiliki 31% Pemuda tidak sekolah dari total pemuda yang berada di Timor Leste', unsafe_allow_html=True)
 
-        st.markdown(p_format+
+    st.markdown(p_format+
                 'Jika dilihat lebih detail lagi, negara yang memiliki IQ yang melebihi Rata-Rata IQ di ASEAN memiliki presentase kurang dari 20%'\
                 'pemuda tidak bersekolah, sedangkan yang berada dibawah rata-rata mencapai 15-30% ', unsafe_allow_html=True)    
-    with col6:
+    # with col6:
         # avg_tdk_sekolah = round(df_combo['Share of youth not in education, employment or training, total (% of youth population)'].mean(),2)
         # col6.metric("Rata-Rata Pemuda Tidak Bersekolah (% of populasi pemuda)", avg_tdk_sekolah)
 
-        fig11 = go.Figure(
-            data=go.Bar(
-                x=df_combo['Nama Negara'],
-                y=df_combo['Total pengeluaran pemerintah untuk pendidikan'],
-                name="Pengeluaran Pendidikan",
-                text=df_combo['Total pengeluaran pemerintah untuk pendidikan']
-            )
-        )
+        # fig11 = go.Figure(
+        #     data=go.Bar(
+        #         x=df_combo['Nama Negara'],
+        #         y=df_combo['Total pengeluaran pemerintah untuk pendidikan'],
+        #         name="Pengeluaran Pendidikan",
+        #         text=df_combo['Total pengeluaran pemerintah untuk pendidikan']
+        #     )
+        # )
 
-        fig11.add_trace(
-            go.Scatter(
-                x=df_combo['Nama Negara'],
+        # fig11.add_trace(
+        #     go.Scatter(
+        #         x=df_combo['Nama Negara'],
+        #         y=df_combo['Total of youth not in education, employment or training'],
+        #         yaxis="y2",
+        #         name="Pemuda Tidak sekolah",
+        #         hovertext=round(df_combo['Share of youth not in education, employment or training, total (% of youth population)'],2),
+        #         hovertemplate ='%{hovertext}%'
+        #     )
+        # )
+
+        # fig11.add_trace(
+        #     go.Scatter(
+        #         x=df_combo['Nama Negara'],
+        #         y=df_combo['Total Youth'],
+        #         yaxis="y2",
+        #         name="Total pemuda",
+        #         # marker=dict(color="crimson"),
+        #     )
+        # )
+    fig11 = go.Figure(data=[
+        go.Bar(x=df_combo['Nama Negara'],
                 y=df_combo['Total of youth not in education, employment or training'],
                 yaxis="y2",
                 name="Pemuda Tidak sekolah",
-                hovertext=round(df_combo['Share of youth not in education, employment or training, total (% of youth population)'],2),
-                hovertemplate ='%{hovertext}%'
-            )
-        )
-
-        fig11.add_trace(
-            go.Scatter(
-                x=df_combo['Nama Negara'],
+                text=round(df_combo['Share of youth not in education, employment or training, total (% of youth population)'],2),
+                # hovertemplate ='%{hovertext}%'
+            ),
+        go.Bar(x=df_combo['Nama Negara'],
                 y=df_combo['Total Youth'],
                 yaxis="y2",
                 name="Total pemuda",
+                text=round(df_combo['Share of youth not in education, employment or training, total (% of youth population)'],2),
                 # marker=dict(color="crimson"),
             )
-        )
+    ])
 
-        fig11.update_layout(
-            title_text='Rata-Rata Pengeluaran dan Total Pemuda yang Tidak Bersekolah (2017-2021)', 
-                        title_x=0.1,
-                        legend=dict(
-                            orientation="h",
-                            y=-0.2,
-                            x=0
-                        ),
+    fig11.update_layout(
+            # title_text='Rata-Rata Pengeluaran dan Total Pemuda yang Tidak Bersekolah (2017-2021)', 
+            #             title_x=0.1,
+            #             legend=dict(
+            #                 orientation="h",
+            #                 y=-0.2,
+            #                 x=0
+            #             ),
             yaxis=dict(
                 title=dict(text="Uang dalam USD"),
                 side="left",
@@ -282,8 +306,8 @@ if menu_id == 'Home':
                 tickmode="sync",
             ),
         )
-        fig11.update_traces(texttemplate='%{text:.3s}')
-        st.plotly_chart(fig11, use_container_width=True)
+        # fig11.update_traces(texttemplate='%{text:.3f}')
+    st.plotly_chart(fig11, use_container_width=True)
 
     st.subheader('Kesimpulan')
     st.markdown(p_format+
