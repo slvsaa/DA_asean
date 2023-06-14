@@ -206,7 +206,7 @@ if menu_id == 'Home':
                 'sedangkan negara dengan IQ di bawah rata-rata ada 3 negara yaitu Brunei, Laos, dan Timor Leste.', unsafe_allow_html=True)
     st.markdown(p_format+
                 'Jika melihat dari presentasenya, Singapura, Kamboja, Myanmar, Thailand, dan Laos memiliki presentase terendah. '\
-                'Padahal 4 dari 5 negara tersebut merupakan neagar yang memiliki IQ diatas rata-rata IQ ASEAN.', unsafe_allow_html=True)
+                'Padahal 4 dari 5 negara tersebut merupakan negara yang memiliki IQ diatas rata-rata IQ ASEAN.', unsafe_allow_html=True)
     
     # Pemuda
     st.subheader('Populasi Pemuda yang tidak sekolah, kerja, maupun pelatihan')
